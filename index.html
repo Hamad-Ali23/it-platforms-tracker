@@ -4,25 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IT Platforms Tracker</title>
-<meta name="description" content="Team tracker for IT learning platforms. Tick platforms as done, add notes, and plan our own platform.">
+<meta name="description" content="Team tracker for IT learning platforms. Track platform progress, add notes, and plan our own platform.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0f1737; --ink2:#1a2552; --paper:#f3f5fc; --card:#ffffff; --line:#e1e6f4;
-  --text:#18203f; --muted:#5d678a;
-  --violet:#5b4bff; --mint:#0fb67f; --amber:#e8920b; --rose:#e0405f;
-  --radius:16px;
-  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
-  --body:'DM Sans','Segoe UI',system-ui,sans-serif;
+  --ink:#172033; --ink2:#2b3448; --paper:#fff7ed; --card:#ffffff; --line:#f1dfcf;
+  --text:#252b38; --muted:#747b89;
+  --violet:#f97316; --mint:#15966a; --amber:#e58a13; --rose:#dc435b;
+  --radius:19px;
+  --display:'Playfair Display',Georgia,serif;
+  --body:'Inter','Segoe UI',system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --paper:#0b1026; --card:#141b3d; --line:#252e5c; --text:#e8ecff; --muted:#9aa5d1;
+    --paper:#171b24; --card:#222936; --line:#394151; --text:#f4f5f7; --muted:#b3bac6;
   }
 }
-:root[data-theme="dark"]{ --paper:#0b1026; --card:#141b3d; --line:#252e5c; --text:#e8ecff; --muted:#9aa5d1; }
+:root[data-theme="dark"]{ --paper:#171b24; --card:#222936; --line:#394151; --text:#f4f5f7; --muted:#b3bac6; }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--text);font:400 15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
@@ -85,10 +85,6 @@ select.field{padding-right:8px}
 .card.s-doing{border-left-color:var(--amber)}
 .card.s-done{border-left-color:var(--mint)}
 .top{display:flex;gap:12px;align-items:flex-start}
-.check{flex:none;width:34px;height:34px;border-radius:10px;border:2px solid var(--line);background:var(--paper);cursor:pointer;display:grid;place-items:center;color:transparent;transition:.15s}
-.check:hover{border-color:var(--mint)}
-.s-done .check{background:var(--mint);border-color:var(--mint);color:#fff}
-.check svg{width:18px;height:18px}
 .title{flex:1;min-width:0}
 .title h3{margin:0;font:700 17px/1.2 var(--display);letter-spacing:-.01em}
 .s-done .title h3{text-decoration:line-through;text-decoration-color:var(--mint);text-decoration-thickness:2px}
@@ -126,6 +122,30 @@ textarea.field{min-height:70px;resize:vertical}
 .idea p{margin:0 0 6px;white-space:pre-wrap}
 .pstat{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
 
+/* team status dashboard + platform brand icons */
+#view-status .status-overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:20px 0}
+.stat-tile{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 6px 20px rgba(65,44,25,.04)}
+.stat-tile .label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.stat-tile strong{display:block;font:800 30px/1.25 var(--display);margin:4px 0}
+.stat-tile small{color:var(--muted)}
+.status-team{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px;margin-bottom:28px}
+.status-member{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:19px;text-align:left;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s;color:var(--text)}
+.status-member:hover{transform:translateY(-3px);border-color:#fb923c;box-shadow:0 12px 28px rgba(65,44,25,.08)}
+.status-member-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:7px}
+.status-member-head b{font:700 18px var(--display)}
+.status-percent{font:800 26px var(--display);color:var(--violet)}
+.status-track{height:9px;border-radius:99px;background:var(--paper);overflow:hidden;border:1px solid var(--line);margin:12px 0}
+.status-track i{display:block;height:100%;border-radius:99px;transition:width .6s ease}
+.status-counts{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.status-counts span{font-size:11px;padding:4px 8px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted);font-weight:700}
+.status-member .hint{font-size:12px;color:var(--muted);margin-top:12px;display:block}
+.platform-brand{width:40px;height:40px;flex:none;display:grid;place-items:center;border-radius:12px;background:#fff;border:1px solid var(--line);overflow:hidden;color:#c2410c;font-weight:800;font-size:15px}
+.platform-brand img{width:28px;height:28px;object-fit:contain}
+.platform-brand .fallback{display:none;place-items:center;width:100%;height:100%;background:#fff7ed}
+.notes-actions .btn.reset-notes{min-width:auto;background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:none}
+.notes-actions .btn.reset-notes:hover{border-color:#fb923c;color:#c2410c}
+@media(max-width:760px){.status-team{grid-template-columns:1fr}.notes-actions{justify-content:stretch}.notes-actions .btn{flex:1}}
+
 /* dialogs + toast */
 dialog{border:0;border-radius:20px;padding:24px;max-width:480px;width:calc(100% - 32px);background:var(--card);color:var(--text);box-shadow:0 30px 80px rgba(8,12,40,.45)}
 dialog::backdrop{background:rgba(10,14,40,.6);backdrop-filter:blur(3px)}
@@ -139,6 +159,58 @@ dialog .sub{color:var(--muted);margin:0 0 16px}
 .toast.show{opacity:1;transform:translateX(-50%)}
 .toast.err{background:var(--rose)}
 [hidden]{display:none!important}
+
+/* refreshed orange-and-cream visual system */
+a{color:var(--violet)}
+:focus-visible{outline:3px solid #fb923c;outline-offset:3px;border-radius:8px}
+.bar{box-shadow:0 5px 24px rgba(80,45,15,.045)}
+.brand{font-family:var(--display);font-size:20px;letter-spacing:-.025em}
+.tab[aria-selected="true"]{background:var(--violet);color:#fff;box-shadow:0 5px 14px rgba(249,115,22,.22)}
+.hero{background:radial-gradient(circle at 88% 8%,rgba(251,146,60,.34),transparent 32%),linear-gradient(130deg,#202a3b 0%,#172033 68%,#3a2b25 100%);border:1px solid rgba(255,255,255,.09);border-radius:30px;margin:28px 0;padding:36px;gap:38px;box-shadow:0 22px 50px rgba(23,32,51,.16);animation:rise-in .55s ease both}
+.ring{width:190px;height:190px;filter:drop-shadow(0 8px 20px rgba(249,115,22,.1))}
+.ring .val{stroke:#fb923c}
+.hero h1{font-family:var(--display);font-size:clamp(30px,4.2vw,44px);letter-spacing:-.035em}
+.hero p{font-size:15px;line-height:1.7}
+.members{grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+.mem{padding:16px 17px;border-radius:17px;min-height:106px;transition:transform .22s ease,background .22s ease,border-color .22s ease,box-shadow .22s ease}
+.mem:hover{transform:translateY(-3px);background:rgba(255,255,255,.13);box-shadow:0 12px 25px rgba(0,0,0,.12)}
+.mem[aria-pressed="true"]{border-color:#fb923c;background:rgba(249,115,22,.19);box-shadow:inset 0 0 0 1px rgba(251,146,60,.25)}
+.field{transition:border-color .18s ease,box-shadow .18s ease;background:var(--card)}
+.field:focus{border-color:#fb923c;box-shadow:0 0 0 3px rgba(249,115,22,.13);outline:none}
+.pill{transition:all .18s ease}
+.pill[aria-pressed="true"]{background:var(--violet);border-color:var(--violet);color:#fff;box-shadow:0 4px 12px rgba(249,115,22,.18)}
+.btn{background:linear-gradient(135deg,#fb923c,#ea580c);color:#fff;border-radius:12px;padding:10px 16px;box-shadow:0 4px 12px rgba(249,115,22,.15);transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.btn:hover{filter:brightness(1.04);transform:translateY(-1px);box-shadow:0 7px 18px rgba(249,115,22,.22)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:none}
+.btn.ghost:hover{border-color:#fb923c;color:var(--violet)}
+.grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,350px),1fr));gap:17px}
+.card{padding:20px;border-radius:20px;gap:14px;border:1px solid var(--line);border-left:5px solid #e8d9cb;box-shadow:0 6px 20px rgba(65,44,25,.045);transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;animation:rise-in .4s ease both}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(65,44,25,.10)}
+.card.s-doing{border-left-color:var(--amber)}
+.card.s-done{border-left-color:var(--mint)}
+.title h3{font-family:var(--display);font-size:19px;line-height:1.25}
+.chip.extra{background:#fff0e4;color:#b84b08;border-color:#fed7aa}
+.links{gap:9px;flex-wrap:wrap}
+.linkbtn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:39px;padding:9px 14px;border-radius:11px;font:700 13px var(--body);text-decoration:none;border:1px solid #fed7aa;color:#c2410c;background:#fff7ed;transition:transform .18s ease,background .18s ease,border-color .18s ease}
+.linkbtn:hover{text-decoration:none;background:#ffedd5;border-color:#fb923c;transform:translateY(-1px)}
+.linkbtn.primary{background:linear-gradient(135deg,#fb923c,#ea580c);border-color:#f97316;color:#fff;box-shadow:0 4px 12px rgba(249,115,22,.17)}
+.linkbtn.primary:hover{background:#ea580c}
+.notes{border-top:1px dashed var(--line);padding-top:16px;gap:10px;animation:notes-in .22s ease both}
+.notes label{font-size:12px;letter-spacing:.025em;text-transform:uppercase}
+.notes textarea.field{min-height:92px;line-height:1.55}
+.notes-actions{display:flex;justify-content:flex-end;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.notes-actions .btn{min-width:138px}
+.notes .stamp{margin-right:auto}
+.panel{border-radius:22px;padding:26px;box-shadow:0 8px 26px rgba(65,44,25,.045)}
+.panel h2,dialog h2{font-family:var(--display);font-weight:700}
+.idea{transition:border-color .18s ease,transform .18s ease}
+.idea:hover{border-color:#fdba74;transform:translateY(-1px)}
+.who-list button:hover{border-color:#fb923c}
+.toast{background:#243044;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+@keyframes rise-in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+@keyframes notes-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.hero,.card,.notes{animation:none!important}.mem,.card,.btn,.linkbtn,.field{transition:none!important}}
 
 @media (max-width:760px){
   .hero{grid-template-columns:1fr;padding:20px;justify-items:start}
@@ -160,6 +232,7 @@ dialog .sub{color:var(--muted);margin:0 0 16px}
     <div class="brand">IT Platforms Tracker</div>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button class="tab" role="tab" id="tab-platforms" aria-selected="true" data-tab="platforms">Platforms</button>
+      <button class="tab" role="tab" id="tab-status" aria-selected="false" data-tab="status">Team Status</button>
       <button class="tab" role="tab" id="tab-ours" aria-selected="false" data-tab="ours">Our platform</button>
     </nav>
     <button class="me" id="meBtn" title="Change who you are"></button>
@@ -176,7 +249,7 @@ dialog .sub{color:var(--muted);margin:0 0 16px}
       <div class="num"><b id="ringPct">0%</b><span id="ringTxt">0 of 0 done</span></div>
     </div>
     <div>
-      <h1>Visit every platform. Tick it when you are done.</h1>
+      <h1>Visit platforms. Track your progress as a team.</h1>
       <p>Everyone sees the same list. When one of us ticks a platform, it changes for the whole team.</p>
       <div class="members" id="members"></div>
     </div>
@@ -190,6 +263,16 @@ dialog .sub{color:var(--muted);margin:0 0 16px}
   </div>
   <p class="count" id="count"></p>
   <div class="grid" id="grid"></div>
+</section>
+
+<section id="view-status" hidden>
+  <div class="panel">
+    <h2>Team progress &amp; status</h2>
+    <p class="sub">See how much work each teammate has completed. Progress is calculated from platforms assigned to each person and marked Done.</p>
+    <div class="status-overview" id="statusOverview"></div>
+    <div class="status-team" id="statusTeam"></div>
+    <p class="sub">Click any teammate card to see their assigned platforms.</p>
+  </div>
 </section>
 
 <section id="view-ours" hidden>
@@ -375,7 +458,6 @@ const db = {
 };
 
 /* ------------------------------------------------------------ rendering */
-const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 
 function renderHero(){
   const total = platforms.length, done = platforms.filter(p => p.status === 'done').length;
@@ -421,7 +503,7 @@ function cardHtml(p){
   const stamp = p.updated_by ? `${p.status === 'done' ? 'Done' : 'Updated'} by ${esc(firstName(p.updated_by))} &middot; ${ago(p.updated_at)}` : 'No updates yet';
   return `<article class="card s-${p.status}${open}" data-id="${esc(p.id)}">
     <div class="top">
-      <button class="check" data-act="toggle" aria-label="${p.status === 'done' ? 'Mark ' + esc(p.name) + ' as not done' : 'Mark ' + esc(p.name) + ' as done'}">${CHECK}</button>
+      <div class="platform-brand" aria-hidden="true">${p.url ? `<img src="https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(p.url)}&sz=64" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"><span class="fallback">${esc((p.name || '?').slice(0,1).toUpperCase())}</span>` : `<span class="fallback" style="display:grid">${esc((p.name || '?').slice(0,1).toUpperCase())}</span>`}</div>
       <div class="title"><h3>${esc(p.name)}</h3><p>${esc(p.learn || '')}</p></div>
     </div>
     <div class="chips">
@@ -439,8 +521,8 @@ function cardHtml(p){
     </div>
     <div class="row">
       <div class="links">
-        ${p.url ? `<a class="linkbtn" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">Visit site</a>` : ''}
-        <button class="linkbtn" data-act="notes">${open ? 'Hide notes' : 'Notes'}</button>
+        ${p.url ? `<a class="linkbtn primary" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">↗ Visit site</a>` : ''}
+        <button class="linkbtn" data-act="notes" aria-expanded="${!!openCards.has(p.id)}">▤ ${open ? 'Hide notes' : 'Notes'}</button>
       </div>
       <span class="stamp">${stamp}</span>
     </div>
@@ -455,6 +537,11 @@ function cardHtml(p){
         </select>
         ${p.is_custom ? '<button class="btn ghost small" data-act="delete">Delete platform</button>' : ''}
       </div>
+      <div class="notes-actions">
+        <span class="stamp" data-note-status aria-live="polite">Edit your notes, then submit to save.</span>
+        <button class="btn reset-notes" type="button" data-act="reset-notes" title="Discard unsaved edits and restore the last saved notes">Reset</button>
+        <button class="btn" type="button" data-act="save-notes">Submit Notes</button>
+      </div>
     </div>
   </article>`;
 }
@@ -466,7 +553,35 @@ function renderGrid(){
     '<div class="empty"><b>No platforms match.</b><br>Clear the search or pick another filter.</div>';
 }
 
-function render(){ renderHero(); renderFilters(); renderGrid(); renderOurs(); }
+function renderStatus(){
+  const total = platforms.length;
+  const done = platforms.filter(p => p.status === 'done').length;
+  const doing = platforms.filter(p => p.status === 'doing').length;
+  const overall = total ? Math.round(done / total * 100) : 0;
+  $('#statusOverview').innerHTML = [
+    `<div class="stat-tile"><span class="label">Overall completion</span><strong>${overall}%</strong><small>${done} of ${total} platforms done</small></div>`,
+    `<div class="stat-tile"><span class="label">Completed</span><strong>${done}</strong><small>Platforms marked Done</small></div>`,
+    `<div class="stat-tile"><span class="label">In progress</span><strong>${doing}</strong><small>Platforms marked Doing</small></div>`,
+    `<div class="stat-tile"><span class="label">Not started</span><strong>${platforms.filter(p => p.status === 'todo').length}</strong><small>Platforms marked To do</small></div>`
+  ].join('');
+  $('#statusTeam').innerHTML = MEMBERS.map(m => {
+    const mine = platforms.filter(p => p.assignee === m.id);
+    const d = mine.filter(p => p.status === 'done').length;
+    const doingMine = mine.filter(p => p.status === 'doing').length;
+    const todo = mine.filter(p => p.status === 'todo').length;
+    const pct = mine.length ? Math.round(d / mine.length * 100) : 0;
+    return `<button class="status-member" type="button" data-status-member="${esc(m.id)}" aria-label="View ${esc(m.name)}'s platforms">
+      <div class="status-member-head"><b><span class="dot" style="background:${m.color};margin-right:7px"></span>${esc(m.name)}</b><span class="status-percent">${pct}%</span></div>
+      <div class="stamp">${esc(m.roll)} · Group ${m.group}</div>
+      <div class="status-track"><i style="width:${pct}%;background:${m.color}"></i></div>
+      <div><strong>${d}</strong> of ${mine.length} assigned platforms completed</div>
+      <div class="status-counts"><span>Done: ${d}</span><span>Doing: ${doingMine}</span><span>To do: ${todo}</span></div>
+      <span class="hint">Click to view assigned platforms →</span>
+    </button>`;
+  }).join('');
+}
+
+function render(){ renderHero(); renderFilters(); renderGrid(); renderOurs(); renderStatus(); }
 let pending = false;
 function softRender(){
   const a = document.activeElement;
@@ -501,22 +616,52 @@ $('#q').addEventListener('input', debounce(e => { filter.q = e.target.value; ren
 
 async function safe(fn){ try{ await fn(); }catch(err){ console.error(err); toast('Could not save. Check your internet and try again.', true); } }
 
-const saveField = debounce(async (id, field, value) => {
-  await safe(async () => { await db.updatePlatform(id, {[field]: value}); toast('Saved'); });
-}, 700);
+// Notes are intentionally saved with the explicit Submit Notes button.
+async function submitNotes(card, platform){
+  const button = card.querySelector('[data-act="save-notes"]');
+  const status = card.querySelector('[data-note-status]');
+  const services = card.querySelector('[data-field="services"]').value;
+  const ourIdea = card.querySelector('[data-field="our_idea"]').value;
+  button.disabled = true;
+  button.textContent = 'Saving…';
+  if(status) status.textContent = 'Saving your notes…';
+  try {
+    await db.updatePlatform(platform.id, {services, our_idea: ourIdea});
+    platform.services = services;
+    platform.our_idea = ourIdea;
+    if(status) status.textContent = 'Notes saved successfully.';
+    toast('Notes saved successfully!');
+  } catch(err) {
+    console.error(err);
+    if(status) status.textContent = 'Could not save. Please try again.';
+    toast('Could not save notes. Check your connection and try again.', true);
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Submit Notes';
+  }
+}
 
 $('#grid').addEventListener('click', async e => {
   const card = e.target.closest('.card'); if(!card) return;
   const id = card.dataset.id, p = platforms.find(x => x.id === id), act = e.target.closest('[data-act]');
   if(!act || !p) return;
-  if(act.dataset.act === 'toggle') await safe(async () => { await db.updatePlatform(id, {status: p.status === 'done' ? 'todo' : 'done'}); render(); if(p.status === 'done') toast('Marked as done'); });
   if(act.dataset.act === 'status') await safe(async () => { await db.updatePlatform(id, {status: act.dataset.v}); render(); });
   if(act.dataset.act === 'notes'){ openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderGrid(); }
+  if(act.dataset.act === 'save-notes') await submitNotes(card, p);
+  if(act.dataset.act === 'reset-notes') {
+    card.querySelector('[data-field="services"]').value = p.services || '';
+    card.querySelector('[data-field="our_idea"]').value = p.our_idea || '';
+    const noteStatus = card.querySelector('[data-note-status]');
+    if(noteStatus) noteStatus.textContent = 'Restored the last saved notes.';
+    toast('Unsaved edits reset. Saved notes are unchanged.');
+  }
   if(act.dataset.act === 'delete' && confirm('Delete ' + p.name + ' for everyone?')) await safe(async () => { await db.deletePlatform(id); render(); });
 });
 $('#grid').addEventListener('input', e => {
   const f = e.target.dataset.field; if(f !== 'services' && f !== 'our_idea') return;
-  saveField(e.target.closest('.card').dataset.id, f, e.target.value);
+  const card = e.target.closest('.card');
+  const status = card && card.querySelector('[data-note-status]');
+  if(status) status.textContent = 'Unsaved changes — click Submit Notes to save.';
 });
 $('#grid').addEventListener('change', async e => {
   if(e.target.dataset.field !== 'assignee') return;
@@ -526,10 +671,19 @@ $('#grid').addEventListener('focusout', () => setTimeout(() => { if(pending && !
 
 /* tabs */
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
-  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t));
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t ? 'true' : 'false'));
   $('#view-platforms').hidden = t.dataset.tab !== 'platforms';
+  $('#view-status').hidden = t.dataset.tab !== 'status';
   $('#view-ours').hidden = t.dataset.tab !== 'ours';
+  if(t.dataset.tab === 'status') renderStatus();
 }));
+$('#statusTeam').addEventListener('click', e => {
+  const b = e.target.closest('[data-status-member]'); if(!b) return;
+  filter.member = b.dataset.statusMember;
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x.dataset.tab === 'platforms' ? 'true' : 'false'));
+  $('#view-platforms').hidden = false; $('#view-status').hidden = true; $('#view-ours').hidden = true;
+  render();
+});
 
 /* who am I */
 function renderMe(){
@@ -544,7 +698,7 @@ $('#meBtn').addEventListener('click', () => $('#whoDlg').showModal());
 
 /* theme */
 $('#themeBtn').addEventListener('click', () => {
-  const dark = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() === '#0b1026';
+  const dark = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() === '#171b24';
   const next = dark ? 'light' : 'dark';
   document.documentElement.dataset.theme = next; localStorage.setItem('itp_theme', next);
 });
