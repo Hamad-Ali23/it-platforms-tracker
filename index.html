@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IT Platforms Tracker</title>
+<meta name="description" content="Team tracker for IT learning platforms. Tick platforms as done, add notes, and plan our own platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f1737; --ink2:#1a2552; --paper:#f3f5fc; --card:#ffffff; --line:#e1e6f4;
+  --text:#18203f; --muted:#5d678a;
+  --violet:#5b4bff; --mint:#0fb67f; --amber:#e8920b; --rose:#e0405f;
+  --radius:16px;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'DM Sans','Segoe UI',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0b1026; --card:#141b3d; --line:#252e5c; --text:#e8ecff; --muted:#9aa5d1;
+  }
+}
+:root[data-theme="dark"]{ --paper:#0b1026; --card:#141b3d; --line:#252e5c; --text:#e8ecff; --muted:#9aa5d1; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--text);font:400 15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--violet)}
+:focus-visible{outline:3px solid var(--violet);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:14px;height:60px}
+.brand{font:800 18px var(--display);letter-spacing:-.01em;margin-right:auto}
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);padding:4px;border-radius:12px}
+.tab{border:0;background:none;padding:7px 14px;border-radius:9px;cursor:pointer;font-weight:700;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--ink);color:#fff}
+.me{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px 6px 8px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700}
+.theme{border:1px solid var(--line);background:var(--card);border-radius:999px;width:36px;height:36px;cursor:pointer}
+.demo{background:#fff4d6;color:#6b4a00;border-bottom:1px solid #f0d78a;font-size:13px;padding:8px 0;text-align:center}
+.demo b{font-weight:700}
+
+/* hero */
+.hero{background:linear-gradient(135deg,var(--ink) 0%,var(--ink2) 100%);color:#fff;border-radius:24px;margin:22px 0;padding:28px;display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center}
+.ring{position:relative;width:170px;height:170px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .trk{stroke:rgba(255,255,255,.14)}
+.ring .val{stroke:#6ef0c0;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1)}
+.ring .num{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .num b{font:800 42px/1 var(--display)}
+.ring .num span{font-size:13px;opacity:.75}
+.hero h1{font:800 clamp(26px,4vw,38px)/1.08 var(--display);margin:0 0 6px;letter-spacing:-.02em}
+.hero p{margin:0 0 18px;opacity:.78;max-width:56ch}
+.members{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.mem{all:unset;box-sizing:border-box;cursor:pointer;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 14px}
+.mem:hover{background:rgba(255,255,255,.12)}
+.mem[aria-pressed="true"]{border-color:#fff;background:rgba(255,255,255,.16)}
+.mem .n{display:flex;align-items:center;gap:8px;font-weight:700}
+.mem .r{font-size:12px;opacity:.7;margin:2px 0 8px}
+.pbar{height:6px;border-radius:9px;background:rgba(255,255,255,.16);overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:9px;transition:width .6s}
+.mem .c{font-size:12px;margin-top:6px;opacity:.85}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 16px;align-items:center}
+.field{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 12px;min-width:0}
+.field.search{flex:1 1 220px}
+select.field{padding-right:8px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 13px;cursor:pointer;font-weight:700;font-size:13px;color:var(--muted)}
+.pill[aria-pressed="true"]{background:var(--violet);border-color:var(--violet);color:#fff}
+.btn{border:0;background:var(--violet);color:#fff;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}
+.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--line)}
+.btn.small{padding:6px 10px;font-size:13px;border-radius:9px}
+.btn:hover{filter:brightness(1.08)}
+.count{color:var(--muted);font-size:13px;margin:0 0 12px}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;padding-bottom:60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:12px;border-left:5px solid var(--line)}
+.card.s-doing{border-left-color:var(--amber)}
+.card.s-done{border-left-color:var(--mint)}
+.top{display:flex;gap:12px;align-items:flex-start}
+.check{flex:none;width:34px;height:34px;border-radius:10px;border:2px solid var(--line);background:var(--paper);cursor:pointer;display:grid;place-items:center;color:transparent;transition:.15s}
+.check:hover{border-color:var(--mint)}
+.s-done .check{background:var(--mint);border-color:var(--mint);color:#fff}
+.check svg{width:18px;height:18px}
+.title{flex:1;min-width:0}
+.title h3{margin:0;font:700 17px/1.2 var(--display);letter-spacing:-.01em}
+.s-done .title h3{text-decoration:line-through;text-decoration-color:var(--mint);text-decoration-thickness:2px}
+.title p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted);font-weight:500}
+.chip.extra{background:#ece9ff;color:#4a3ce0;border-color:#d6d1ff}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.who{display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px}
+.seg{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:none;padding:5px 10px;border-radius:7px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"].todo{background:var(--card);color:var(--text);box-shadow:0 0 0 1px var(--line)}
+.seg button[aria-pressed="true"].doing{background:var(--amber);color:#fff}
+.seg button[aria-pressed="true"].done{background:var(--mint);color:#fff}
+.links{display:flex;gap:8px;align-items:center}
+.linkbtn{background:none;border:0;padding:0;color:var(--violet);font-weight:700;cursor:pointer;font-size:13px;text-decoration:none}
+.linkbtn:hover{text-decoration:underline}
+.notes{display:none;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:12px}
+.card.open .notes{display:flex}
+.notes label{font-size:12px;font-weight:700;color:var(--muted)}
+textarea.field,input.field{width:100%}
+textarea.field{min-height:70px;resize:vertical}
+.stamp{font-size:12px;color:var(--muted)}
+.empty{grid-column:1/-1;text-align:center;padding:50px 10px;color:var(--muted)}
+
+/* our platform */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin:22px 0}
+.panel h2{margin:0 0 4px;font:800 24px var(--display);letter-spacing:-.01em}
+.panel .sub{color:var(--muted);margin:0 0 16px}
+.form{display:grid;gap:10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ideas{display:grid;gap:10px;margin-top:18px}
+.idea{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;gap:12px;justify-content:space-between;background:var(--paper)}
+.idea h4{margin:0 0 4px;font:700 16px var(--display)}
+.idea p{margin:0 0 6px;white-space:pre-wrap}
+.pstat{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+
+/* dialogs + toast */
+dialog{border:0;border-radius:20px;padding:24px;max-width:480px;width:calc(100% - 32px);background:var(--card);color:var(--text);box-shadow:0 30px 80px rgba(8,12,40,.45)}
+dialog::backdrop{background:rgba(10,14,40,.6);backdrop-filter:blur(3px)}
+dialog h2{margin:0 0 4px;font:800 24px var(--display)}
+dialog .sub{color:var(--muted);margin:0 0 16px}
+.who-list{display:grid;gap:8px}
+.who-list button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:12px;padding:12px;cursor:pointer;font-weight:700}
+.who-list button:hover{border-color:var(--violet)}
+.who-list small{display:block;font-weight:400;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50;font-weight:700;font-size:14px}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.toast.err{background:var(--rose)}
+[hidden]{display:none!important}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr;padding:20px;justify-items:start}
+  .two{grid-template-columns:1fr}
+  .bar .wrap{height:auto;padding-top:10px;padding-bottom:10px;flex-wrap:wrap}
+  .brand{width:100%}
+  .tabs{order:3;flex:1}
+  .tab{flex:1}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="demo" id="demoBar" hidden><b>Demo mode.</b> Your changes are saved only on this device. Add your Supabase keys in <code>config.js</code> so the whole team shares one tracker.</div>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand">IT Platforms Tracker</div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-platforms" aria-selected="true" data-tab="platforms">Platforms</button>
+      <button class="tab" role="tab" id="tab-ours" aria-selected="false" data-tab="ours">Our platform</button>
+    </nav>
+    <button class="me" id="meBtn" title="Change who you are"></button>
+    <button class="theme" id="themeBtn" aria-label="Switch light or dark theme">◐</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="view-platforms">
+  <div class="hero">
+    <div class="ring" aria-label="Team progress">
+      <svg viewBox="0 0 120 120"><circle class="trk" cx="60" cy="60" r="52" fill="none" stroke-width="11"/><circle class="val" id="ringVal" cx="60" cy="60" r="52" fill="none" stroke-width="11" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+      <div class="num"><b id="ringPct">0%</b><span id="ringTxt">0 of 0 done</span></div>
+    </div>
+    <div>
+      <h1>Visit every platform. Tick it when you are done.</h1>
+      <p>Everyone sees the same list. When one of us ticks a platform, it changes for the whole team.</p>
+      <div class="members" id="members"></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <input class="field search" id="q" type="search" placeholder="Search platforms" aria-label="Search platforms">
+    <select class="field" id="catSel" aria-label="Filter by category"></select>
+    <div class="pills" id="statusPills" role="group" aria-label="Filter by status"></div>
+    <button class="btn" id="addBtn">Add platform</button>
+  </div>
+  <p class="count" id="count"></p>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="view-ours" hidden>
+  <div class="panel">
+    <h2>The platform we are building</h2>
+    <p class="sub">When your own platform is ready, add its name and link here.</p>
+    <div class="pstat" id="ourLink"></div>
+    <div class="form">
+      <div class="two">
+        <input class="field" id="pName" placeholder="Platform name">
+        <input class="field" id="pUrl" type="url" placeholder="Link (https://...)">
+      </div>
+      <textarea class="field" id="pDesc" placeholder="What does our platform do differently?"></textarea>
+      <div><button class="btn" id="pSave">Save platform details</button></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Ideas for our platform</h2>
+    <p class="sub">Found a good feature on another platform? Write it here so the team can use it.</p>
+    <div class="form">
+      <input class="field" id="iTitle" placeholder="Idea title (example: daily streak)">
+      <textarea class="field" id="iDetails" placeholder="Details: which platform has it and how we can do it better"></textarea>
+      <div><button class="btn" id="iAdd">Add idea</button></div>
+    </div>
+    <div class="ideas" id="ideas"></div>
+  </div>
+</section>
+
+</main>
+
+<dialog id="whoDlg">
+  <h2>Who are you?</h2>
+  <p class="sub">We save your name with every change you make.</p>
+  <div class="who-list" id="whoList"></div>
+  <p class="sub" style="margin:14px 0 6px">Someone else?</p>
+  <div style="display:flex;gap:8px"><input class="field" id="otherName" placeholder="Your name"><button class="btn" id="otherBtn">Continue</button></div>
+</dialog>
+
+<dialog id="addDlg">
+  <h2>Add a platform</h2>
+  <p class="sub">Found one that is not in the list? Add it.</p>
+  <div class="form">
+    <input class="field" id="aName" placeholder="Platform name" required>
+    <input class="field" id="aUrl" type="url" placeholder="Link (https://...)">
+    <input class="field" id="aLearn" placeholder="What can you learn there?">
+    <div class="two">
+      <input class="field" id="aCost" placeholder="Cost (Free, Paid...)">
+      <input class="field" id="aGame" placeholder="Gamified? (Yes, No...)">
+    </div>
+    <div class="two">
+      <select class="field" id="aCat"></select>
+      <select class="field" id="aWho"></select>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost" id="aCancel">Cancel</button>
+      <button class="btn" id="aSave">Add platform</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+/* ------------------------------------------------------------------ data */
+const MEMBERS = [{"id": "hamad", "name": "Hamad Ali", "roll": "24IT23", "group": 1, "color": "#7b6cff"}, {"id": "irfan", "name": "Irfan Ali Rind", "roll": "24IT25", "group": 1, "color": "#0fb67f"}, {"id": "hanzala", "name": "Hanzala Ali", "roll": "24IT86", "group": 2, "color": "#f5a524"}, {"id": "adnan", "name": "Adnan", "roll": "24IT49", "group": 2, "color": "#f0506e"}];
+const SEED = [{"id": "p001", "name": "TryHackMe", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "Beginner guided labs, SOC Level 1 path, streaks and badges", "gamified": "Yes, very", "cost": "Free and paid", "url": "https://tryhackme.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 1}, {"id": "p002", "name": "LetsDefend", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "Real SOC analyst simulation (alerts, tickets, playbooks)", "gamified": "Yes", "cost": "Free and paid", "url": "https://letsdefend.io", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 2}, {"id": "p003", "name": "Hack The Box / HTB Academy", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Hacking labs (pentesting) and courses", "gamified": "Yes", "cost": "Free and paid", "url": "https://hackthebox.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 3}, {"id": "p004", "name": "Blue Team Labs Online", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "Defensive investigations and forensics", "gamified": "Yes", "cost": "Free and paid", "url": "https://blueteamlabs.online", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 4}, {"id": "p005", "name": "CyberDefenders", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "Blue team challenges, SOC and forensics", "gamified": "Yes", "cost": "Free and paid", "url": "https://cyberdefenders.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 5}, {"id": "p006", "name": "Splunk Boss of the SOC", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "SIEM investigations on real SOC data", "gamified": "Medium", "cost": "Free", "url": "https://bots.splunk.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 6}, {"id": "p007", "name": "Malware-Traffic-Analysis.net", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "Network traffic analysis, malware packet captures", "gamified": "No", "cost": "Free", "url": "https://malware-traffic-analysis.net", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 7}, {"id": "p008", "name": "Immersive Labs", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "Cyber skills labs (company-focused)", "gamified": "Yes", "cost": "Mostly paid, some free", "url": "https://immersivelabs.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 8}, {"id": "p009", "name": "OverTheWire", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Linux and security wargames (Bandit is for beginners)", "gamified": "Yes", "cost": "Free", "url": "https://overthewire.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 9}, {"id": "p010", "name": "Root-Me", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Security challenges in many areas", "gamified": "Medium", "cost": "Free", "url": "https://root-me.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 10}, {"id": "p011", "name": "picoCTF", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Beginner CTF (capture the flag)", "gamified": "Yes", "cost": "Free", "url": "https://picoctf.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 11}, {"id": "p012", "name": "CTFlearn", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "CTF puzzles", "gamified": "Yes", "cost": "Free", "url": "https://ctflearn.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 12}, {"id": "p013", "name": "CryptoHack", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Cryptography challenges", "gamified": "Yes", "cost": "Free", "url": "https://cryptohack.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 13}, {"id": "p014", "name": "PortSwigger Web Security Academy", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Web hacking (best free resource)", "gamified": "Medium", "cost": "Free", "url": "https://portswigger.net/web-security", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 14}, {"id": "p015", "name": "OWASP Juice Shop", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Practice web app with many bugs (run locally)", "gamified": "Yes (score board)", "cost": "Free", "url": "https://owasp-juice.shop", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 15}, {"id": "p016", "name": "DVWA", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Deliberately vulnerable web app lab", "gamified": "No", "cost": "Free", "url": "https://dvwa.co.uk", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 16}, {"id": "p017", "name": "WebGoat", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Web security lessons (OWASP)", "gamified": "Low", "cost": "Free", "url": "https://owasp.org/www-project-webgoat", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 17}, {"id": "p018", "name": "Google Gruyere", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Web security learning (small vulnerable app)", "gamified": "No", "cost": "Free", "url": "https://google-gruyere.appspot.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 18}, {"id": "p019", "name": "VulnHub", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Local vulnerable virtual machines", "gamified": "No", "cost": "Free", "url": "https://vulnhub.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 19}, {"id": "p020", "name": "TCM Security Academy", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "Ethical hacking and SOC courses", "gamified": "Low", "cost": "Paid", "url": "https://academy.tcm-sec.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 20}, {"id": "p021", "name": "Cybrary", "category": "Cybersecurity and SOC", "assignee": "hamad", "learn": "Security courses", "gamified": "Low", "cost": "Free and paid", "url": "https://cybrary.it", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 21}, {"id": "p022", "name": "Hacker101", "category": "Cybersecurity and SOC", "assignee": "irfan", "learn": "Free web security video lessons and CTF by HackerOne", "gamified": "Medium", "cost": "Free", "url": "https://hacker101.com", "is_custom": false, "is_extra": true, "status": "todo", "services": "", "our_idea": "", "sort": 22}, {"id": "p023", "name": "LabEx", "category": "Cloud, Linux and DevOps", "assignee": "hamad", "learn": "Browser-based hands-on labs: Linux, cybersecurity, DevOps, programming (no setup needed)", "gamified": "Medium", "cost": "Free and paid", "url": "https://labex.io", "is_custom": false, "is_extra": true, "status": "todo", "services": "", "our_idea": "", "sort": 23}, {"id": "p024", "name": "AWS Skill Builder", "category": "Cloud, Linux and DevOps", "assignee": "hamad", "learn": "AWS courses, labs and cloud security learning", "gamified": "Medium", "cost": "Free and paid", "url": "https://skillbuilder.aws", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 24}, {"id": "p025", "name": "AWS Cloud Quest", "category": "Cloud, Linux and DevOps", "assignee": "hamad", "learn": "AWS taught as a game", "gamified": "Yes", "cost": "Free and paid", "url": "https://aws.amazon.com/training/digital/aws-cloud-quest", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 25}, {"id": "p026", "name": "Google Cloud Skills Boost", "category": "Cloud, Linux and DevOps", "assignee": "hamad", "learn": "Hands-on labs with badges", "gamified": "Yes", "cost": "Free and paid", "url": "https://cloudskillsboost.google", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 26}, {"id": "p027", "name": "KodeKloud", "category": "Cloud, Linux and DevOps", "assignee": "hamad", "learn": "Docker, Kubernetes, DevOps labs", "gamified": "Medium", "cost": "Free and paid", "url": "https://kodekloud.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 27}, {"id": "p028", "name": "Linux Journey", "category": "Cloud, Linux and DevOps", "assignee": "hamad", "learn": "Linux basics", "gamified": "Low", "cost": "Free", "url": "https://linuxjourney.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 28}, {"id": "p029", "name": "Killercoda / Play with Docker", "category": "Cloud, Linux and DevOps", "assignee": "hamad", "learn": "Practice labs in the browser", "gamified": "Low", "cost": "Free", "url": "https://killercoda.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 29}, {"id": "p030", "name": "roadmap.sh", "category": "Cloud, Linux and DevOps", "assignee": "irfan", "learn": "Learning roadmaps for every IT role", "gamified": "No", "cost": "Free", "url": "https://roadmap.sh", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 30}, {"id": "p031", "name": "Cisco Networking Academy", "category": "Hardware and Networking", "assignee": "hamad", "learn": "Networking and Packet Tracer", "gamified": "Medium", "cost": "Free and paid", "url": "https://netacad.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 31}, {"id": "p032", "name": "Professor Messer", "category": "Hardware and Networking", "assignee": "hamad", "learn": "CompTIA A+, Network+, Security+ videos", "gamified": "No", "cost": "Free", "url": "https://professormesser.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 32}, {"id": "p033", "name": "Nand2Tetris", "category": "Hardware and Networking", "assignee": "irfan", "learn": "Build a computer from scratch", "gamified": "Medium", "cost": "Free", "url": "https://nand2tetris.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 33}, {"id": "p034", "name": "Nand Game", "category": "Hardware and Networking", "assignee": "irfan", "learn": "Build logic gates and a computer", "gamified": "Yes", "cost": "Free", "url": "https://nandgame.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 34}, {"id": "p035", "name": "Turing Complete (Steam game)", "category": "Hardware and Networking", "assignee": "irfan", "learn": "Build a CPU in a game", "gamified": "Yes", "cost": "Paid", "url": "https://turingcomplete.game", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 35}, {"id": "p036", "name": "Crash Course Computer Science (YouTube)", "category": "Hardware and Networking", "assignee": "irfan", "learn": "How computers work", "gamified": "No", "cost": "Free", "url": "https://youtube.com/@crashcourse", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 36}, {"id": "p037", "name": "freeCodeCamp", "category": "All-in-one", "assignee": "hanzala", "learn": "Web dev, Python, data, security basics", "gamified": "Medium (projects, certificates)", "cost": "Free", "url": "https://freecodecamp.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 37}, {"id": "p038", "name": "Codecademy", "category": "All-in-one", "assignee": "hanzala", "learn": "Web, Python, SQL, cybersecurity, AI", "gamified": "Yes (streaks, quizzes)", "cost": "Free and paid", "url": "https://codecademy.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 38}, {"id": "p039", "name": "Codedex", "category": "All-in-one", "assignee": "hanzala", "learn": "Python, HTML, JavaScript (game-style adventure)", "gamified": "Yes", "cost": "Free and paid", "url": "https://codedex.io", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 39}, {"id": "p040", "name": "Boot.dev", "category": "All-in-one", "assignee": "hanzala", "learn": "Backend dev, Python, Go, SQL (RPG style, XP, levels)", "gamified": "Yes, very", "cost": "Paid, some free", "url": "https://boot.dev", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 40}, {"id": "p041", "name": "Sololearn", "category": "All-in-one", "assignee": "hanzala", "learn": "Coding on mobile", "gamified": "Yes (XP, leaderboard)", "cost": "Free and paid", "url": "https://sololearn.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 41}, {"id": "p042", "name": "Mimo", "category": "All-in-one", "assignee": "hanzala", "learn": "Coding on mobile (like Duolingo)", "gamified": "Yes", "cost": "Free and paid", "url": "https://mimo.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 42}, {"id": "p043", "name": "Coursera", "category": "All-in-one", "assignee": "hanzala", "learn": "Everything (university courses)", "gamified": "Low", "cost": "Free to audit, paid for certificate", "url": "https://coursera.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 43}, {"id": "p044", "name": "Udemy", "category": "All-in-one", "assignee": "hanzala", "learn": "Everything (video courses)", "gamified": "Low", "cost": "Paid (cheap on sale)", "url": "https://udemy.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 44}, {"id": "p045", "name": "edX / CS50 (Harvard)", "category": "All-in-one", "assignee": "hanzala", "learn": "Computer science fundamentals", "gamified": "Low", "cost": "Free to audit", "url": "https://cs50.harvard.edu/x", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 45}, {"id": "p046", "name": "Microsoft Learn", "category": "All-in-one", "assignee": "hanzala", "learn": "Cloud, AI, dev, security", "gamified": "Yes (XP, badges)", "cost": "Free", "url": "https://learn.microsoft.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 46}, {"id": "p047", "name": "Educative", "category": "All-in-one", "assignee": "hanzala", "learn": "Interactive text courses, system design", "gamified": "Medium", "cost": "Paid", "url": "https://educative.io", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 47}, {"id": "p048", "name": "Pluralsight", "category": "All-in-one", "assignee": "hanzala", "learn": "Broad IT and certifications", "gamified": "Low", "cost": "Paid", "url": "https://pluralsight.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 48}, {"id": "p049", "name": "Khan Academy", "category": "All-in-one", "assignee": "hanzala", "learn": "Computer science and maths basics", "gamified": "Medium", "cost": "Free", "url": "https://khanacademy.org", "is_custom": false, "is_extra": true, "status": "todo", "services": "", "our_idea": "", "sort": 49}, {"id": "p050", "name": "Udacity", "category": "All-in-one", "assignee": "hanzala", "learn": "Nanodegree programs (AI, data, programming)", "gamified": "Low", "cost": "Paid", "url": "https://udacity.com", "is_custom": false, "is_extra": true, "status": "todo", "services": "", "our_idea": "", "sort": 50}, {"id": "p051", "name": "The Odin Project", "category": "Web Development", "assignee": "adnan", "learn": "Full-stack web dev path", "gamified": "Low", "cost": "Free", "url": "https://theodinproject.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 51}, {"id": "p052", "name": "Scrimba", "category": "Web Development", "assignee": "adnan", "learn": "Interactive HTML, CSS, JavaScript, React", "gamified": "Medium", "cost": "Free and paid", "url": "https://scrimba.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 52}, {"id": "p053", "name": "Frontend Mentor", "category": "Web Development", "assignee": "adnan", "learn": "Real-world project challenges", "gamified": "Medium", "cost": "Free and paid", "url": "https://frontendmentor.io", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 53}, {"id": "p054", "name": "CSS Battle", "category": "Web Development", "assignee": "adnan", "learn": "CSS coding battles", "gamified": "Yes", "cost": "Free", "url": "https://cssbattle.dev", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 54}, {"id": "p055", "name": "Flexbox Froggy / Grid Garden", "category": "Web Development", "assignee": "adnan", "learn": "CSS layout games", "gamified": "Yes", "cost": "Free", "url": "https://flexboxfroggy.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 55}, {"id": "p056", "name": "CodeCombat", "category": "Web Development", "assignee": "adnan", "learn": "Learn coding by playing a game", "gamified": "Yes", "cost": "Free and paid", "url": "https://codecombat.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 56}, {"id": "p057", "name": "MDN Web Docs", "category": "Web Development", "assignee": "adnan", "learn": "Best web reference", "gamified": "No", "cost": "Free", "url": "https://developer.mozilla.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 57}, {"id": "p058", "name": "W3Schools", "category": "Web Development", "assignee": "adnan", "learn": "Quick HTML, CSS, JS, SQL tutorials with try-it editor", "gamified": "Low", "cost": "Free", "url": "https://w3schools.com", "is_custom": false, "is_extra": true, "status": "todo", "services": "", "our_idea": "", "sort": 58}, {"id": "p059", "name": "LeetCode", "category": "Software Engineering", "assignee": "adnan", "learn": "Interview and algorithm practice", "gamified": "Medium (streaks, contests)", "cost": "Free and paid", "url": "https://leetcode.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 59}, {"id": "p060", "name": "HackerRank", "category": "Software Engineering", "assignee": "adnan", "learn": "Coding challenges and skill badges", "gamified": "Yes", "cost": "Free", "url": "https://hackerrank.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 60}, {"id": "p061", "name": "Codewars", "category": "Software Engineering", "assignee": "adnan", "learn": "Coding kata with ranks, like martial arts belts", "gamified": "Yes", "cost": "Free", "url": "https://codewars.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 61}, {"id": "p062", "name": "Exercism", "category": "Software Engineering", "assignee": "adnan", "learn": "Practice in 60+ languages with mentors", "gamified": "Medium", "cost": "Free", "url": "https://exercism.org", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 62}, {"id": "p063", "name": "CodeSignal", "category": "Software Engineering", "assignee": "adnan", "learn": "Practice and assessments", "gamified": "Medium", "cost": "Free", "url": "https://codesignal.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 63}, {"id": "p064", "name": "NeetCode", "category": "Software Engineering", "assignee": "adnan", "learn": "Structured DSA roadmap", "gamified": "Low", "cost": "Free and paid", "url": "https://neetcode.io", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 64}, {"id": "p065", "name": "Codeforces", "category": "Software Engineering", "assignee": "adnan", "learn": "Competitive programming", "gamified": "Yes (ratings)", "cost": "Free", "url": "https://codeforces.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 65}, {"id": "p066", "name": "GeeksforGeeks", "category": "Software Engineering", "assignee": "adnan", "learn": "DSA, CS subjects, interview prep articles", "gamified": "Low", "cost": "Free and paid", "url": "https://geeksforgeeks.org", "is_custom": false, "is_extra": true, "status": "todo", "services": "", "our_idea": "", "sort": 66}, {"id": "p067", "name": "Kaggle Learn", "category": "AI and Machine Learning", "assignee": "hanzala", "learn": "ML, Python, data (short lessons) and competitions", "gamified": "Medium", "cost": "Free", "url": "https://kaggle.com/learn", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 67}, {"id": "p068", "name": "fast.ai", "category": "AI and Machine Learning", "assignee": "hanzala", "learn": "Practical deep learning", "gamified": "No", "cost": "Free", "url": "https://fast.ai", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 68}, {"id": "p069", "name": "DeepLearning.AI", "category": "AI and Machine Learning", "assignee": "hanzala", "learn": "Andrew Ng's courses", "gamified": "Low", "cost": "Free and paid", "url": "https://deeplearning.ai", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 69}, {"id": "p070", "name": "Hugging Face Learn", "category": "AI and Machine Learning", "assignee": "hanzala", "learn": "LLMs, NLP, agents", "gamified": "Low", "cost": "Free", "url": "https://huggingface.co/learn", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 70}, {"id": "p071", "name": "Google ML Crash Course", "category": "AI and Machine Learning", "assignee": "adnan", "learn": "ML fundamentals", "gamified": "Low", "cost": "Free", "url": "https://developers.google.com/machine-learning/crash-course", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 71}, {"id": "p072", "name": "Anthropic Academy", "category": "AI and Machine Learning", "assignee": "adnan", "learn": "Claude and AI courses", "gamified": "Low", "cost": "Free", "url": "https://anthropic.skilljar.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 72}, {"id": "p073", "name": "Elements of AI", "category": "AI and Machine Learning", "assignee": "adnan", "learn": "AI basics for beginners", "gamified": "Low", "cost": "Free", "url": "https://elementsofai.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 73}, {"id": "p074", "name": "SQL Murder Mystery", "category": "Databases (SQL)", "assignee": "hanzala", "learn": "Solve a crime using SQL", "gamified": "Yes", "cost": "Free", "url": "https://mystery.knightlab.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 74}, {"id": "p075", "name": "SQLBolt / SQLZoo", "category": "Databases (SQL)", "assignee": "hanzala", "learn": "Step-by-step SQL practice", "gamified": "Low", "cost": "Free", "url": "https://sqlbolt.com", "is_custom": false, "is_extra": false, "status": "todo", "services": "", "our_idea": "", "sort": 75}];
+const CATS = [...new Set(SEED.map(p=>p.category))];
+const STATUS = {todo:'To do', doing:'Doing', done:'Done'};
+
+const cfg = window.APP_CONFIG || {};
+const LIVE = !!(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
+const sb = LIVE ? supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY) : null;
+
+let platforms = [], ideas = [], settings = {};
+let me = localStorage.getItem('itp_me') || '';
+const filter = {q:'', member:'all', cat:'all', status:'all'};
+const openCards = new Set();
+
+/* --------------------------------------------------------------- helpers */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const member = id => MEMBERS.find(m => m.id === id);
+const color = id => (member(id) || {color:'#8a93b8'}).color;
+const firstName = id => member(id) ? member(id).name.split(' ')[0] : (id || 'Someone');
+function ago(iso){
+  if(!iso) return '';
+  const s = Math.max(1, (Date.now() - new Date(iso)) / 1000);
+  if(s < 60) return 'just now';
+  if(s < 3600) return Math.floor(s/60) + ' min ago';
+  if(s < 86400) return Math.floor(s/3600) + ' h ago';
+  return Math.floor(s/86400) + ' d ago';
+}
+let toastT;
+function toast(msg, err){
+  const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : '');
+  clearTimeout(toastT); toastT = setTimeout(() => t.className = 'toast', 2200);
+}
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+/* --------------------------------------------------------- storage layer */
+const DEMO_KEY = 'itp_demo_v1';
+function demoLoad(){
+  try{ const d = JSON.parse(localStorage.getItem(DEMO_KEY)); if(d) return d; }catch(e){}
+  return {platforms: SEED.map(p => ({...p})), ideas: [], settings: {}};
+}
+function demoSave(){ localStorage.setItem(DEMO_KEY, JSON.stringify({platforms, ideas, settings})); }
+
+const db = {
+  async load(){
+    if(!LIVE){ const d = demoLoad(); platforms = d.platforms; ideas = d.ideas; settings = d.settings; return; }
+    const [p, i, s] = await Promise.all([
+      sb.from('platforms').select('*').order('sort'),
+      sb.from('ideas').select('*').order('created_at', {ascending:false}),
+      sb.from('settings').select('*')
+    ]);
+    if(p.error) throw p.error;
+    platforms = p.data || []; ideas = (i.data || []);
+    settings = Object.fromEntries((s.data || []).map(r => [r.key, r.value]));
+  },
+  async updatePlatform(id, patch){
+    patch = {...patch, updated_by: me || null, updated_at: new Date().toISOString()};
+    const i = platforms.findIndex(p => p.id === id);
+    if(i > -1) platforms[i] = {...platforms[i], ...patch};
+    if(!LIVE){ demoSave(); return; }
+    const {error} = await sb.from('platforms').update(patch).eq('id', id);
+    if(error) throw error;
+  },
+  async addPlatform(obj){
+    platforms.push(obj);
+    if(!LIVE){ demoSave(); return; }
+    const {error} = await sb.from('platforms').insert(obj);
+    if(error) throw error;
+  },
+  async deletePlatform(id){
+    platforms = platforms.filter(p => p.id !== id);
+    if(!LIVE){ demoSave(); return; }
+    const {error} = await sb.from('platforms').delete().eq('id', id);
+    if(error) throw error;
+  },
+  async addIdea(obj){
+    if(!LIVE){ obj.id = Date.now(); ideas.unshift(obj); demoSave(); return; }
+    const {data, error} = await sb.from('ideas').insert(obj).select().single();
+    if(error) throw error;
+    if(!ideas.find(x => x.id === data.id)) ideas.unshift(data);
+  },
+  async deleteIdea(id){
+    ideas = ideas.filter(x => x.id !== id);
+    if(!LIVE){ demoSave(); return; }
+    const {error} = await sb.from('ideas').delete().eq('id', id);
+    if(error) throw error;
+  },
+  async setSettings(obj){
+    Object.assign(settings, obj);
+    if(!LIVE){ demoSave(); return; }
+    const rows = Object.entries(obj).map(([key, value]) => ({key, value}));
+    const {error} = await sb.from('settings').upsert(rows);
+    if(error) throw error;
+  },
+  subscribe(){
+    if(!LIVE) return;
+    sb.channel('team-tracker')
+      .on('postgres_changes', {event:'*', schema:'public', table:'platforms'}, e => {
+        if(e.eventType === 'DELETE') platforms = platforms.filter(p => p.id !== e.old.id);
+        else {
+          const i = platforms.findIndex(p => p.id === e.new.id);
+          if(i > -1) platforms[i] = e.new; else platforms.push(e.new);
+        }
+        softRender();
+      })
+      .on('postgres_changes', {event:'*', schema:'public', table:'ideas'}, e => {
+        if(e.eventType === 'DELETE') ideas = ideas.filter(x => x.id !== e.old.id);
+        else if(!ideas.find(x => x.id === e.new.id)) ideas.unshift(e.new);
+        renderOurs();
+      })
+      .on('postgres_changes', {event:'*', schema:'public', table:'settings'}, e => {
+        if(e.new) { settings[e.new.key] = e.new.value; renderOurs(); }
+      })
+      .subscribe();
+  }
+};
+
+/* ------------------------------------------------------------ rendering */
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+function renderHero(){
+  const total = platforms.length, done = platforms.filter(p => p.status === 'done').length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  $('#ringPct').textContent = pct + '%';
+  $('#ringTxt').textContent = done + ' of ' + total + ' done';
+  $('#ringVal').style.strokeDashoffset = 326.7 * (1 - (total ? done / total : 0));
+  $('#members').innerHTML = MEMBERS.map(m => {
+    const mine = platforms.filter(p => p.assignee === m.id);
+    const d = mine.filter(p => p.status === 'done').length;
+    const w = mine.length ? d / mine.length * 100 : 0;
+    return `<button class="mem" data-member="${m.id}" aria-pressed="${filter.member === m.id}">
+      <div class="n"><span class="dot" style="background:${m.color}"></span>${esc(m.name)}</div>
+      <div class="r">${esc(m.roll)} &middot; Group ${m.group}</div>
+      <div class="pbar"><i style="width:${w}%;background:${m.color}"></i></div>
+      <div class="c">${d} of ${mine.length} done</div></button>`;
+  }).join('');
+}
+
+function renderFilters(){
+  const sel = $('#catSel'), cur = filter.cat;
+  sel.innerHTML = '<option value="all">All categories</option>' + CATS.map(c => `<option>${esc(c)}</option>`).join('');
+  sel.value = cur;
+  const counts = {all: platforms.length};
+  Object.keys(STATUS).forEach(k => counts[k] = platforms.filter(p => p.status === k).length);
+  $('#statusPills').innerHTML = [['all','All'], ...Object.entries(STATUS)].map(([k, v]) =>
+    `<button class="pill" data-status="${k}" aria-pressed="${filter.status === k}">${v} (${counts[k]})</button>`).join('');
+}
+
+function visible(){
+  const q = filter.q.trim().toLowerCase();
+  return platforms.filter(p =>
+    (filter.member === 'all' || p.assignee === filter.member) &&
+    (filter.cat === 'all' || p.category === filter.cat) &&
+    (filter.status === 'all' || p.status === filter.status) &&
+    (!q || (p.name + ' ' + (p.learn || '') + ' ' + p.category).toLowerCase().includes(q))
+  ).sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+}
+
+function cardHtml(p){
+  const open = openCards.has(p.id) ? ' open' : '';
+  const who = member(p.assignee);
+  const stamp = p.updated_by ? `${p.status === 'done' ? 'Done' : 'Updated'} by ${esc(firstName(p.updated_by))} &middot; ${ago(p.updated_at)}` : 'No updates yet';
+  return `<article class="card s-${p.status}${open}" data-id="${esc(p.id)}">
+    <div class="top">
+      <button class="check" data-act="toggle" aria-label="${p.status === 'done' ? 'Mark ' + esc(p.name) + ' as not done' : 'Mark ' + esc(p.name) + ' as done'}">${CHECK}</button>
+      <div class="title"><h3>${esc(p.name)}</h3><p>${esc(p.learn || '')}</p></div>
+    </div>
+    <div class="chips">
+      <span class="chip">${esc(p.category)}</span>
+      ${p.gamified ? `<span class="chip">Gamified: ${esc(p.gamified)}</span>` : ''}
+      ${p.cost ? `<span class="chip">${esc(p.cost)}</span>` : ''}
+      ${p.is_extra ? '<span class="chip extra">Added by us</span>' : ''}
+      ${p.is_custom ? '<span class="chip extra">Custom</span>' : ''}
+    </div>
+    <div class="row">
+      <span class="who"><span class="dot" style="background:${color(p.assignee)}"></span>${esc(who ? who.name : 'Unassigned')}</span>
+      <div class="seg" role="group" aria-label="Status">
+        ${Object.entries(STATUS).map(([k, v]) => `<button class="${k}" data-act="status" data-v="${k}" aria-pressed="${p.status === k}">${v}</button>`).join('')}
+      </div>
+    </div>
+    <div class="row">
+      <div class="links">
+        ${p.url ? `<a class="linkbtn" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">Visit site</a>` : ''}
+        <button class="linkbtn" data-act="notes">${open ? 'Hide notes' : 'Notes'}</button>
+      </div>
+      <span class="stamp">${stamp}</span>
+    </div>
+    <div class="notes">
+      <label for="sv-${esc(p.id)}">Services we found</label>
+      <textarea class="field" id="sv-${esc(p.id)}" data-field="services" placeholder="Courses, labs, certificates, price, mobile app...">${esc(p.services || '')}</textarea>
+      <label for="id-${esc(p.id)}">How we can be different</label>
+      <textarea class="field" id="id-${esc(p.id)}" data-field="our_idea" placeholder="One idea for our platform">${esc(p.our_idea || '')}</textarea>
+      <div class="row">
+        <select class="field" data-field="assignee" aria-label="Assigned to">
+          ${MEMBERS.map(m => `<option value="${m.id}" ${p.assignee === m.id ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}
+        </select>
+        ${p.is_custom ? '<button class="btn ghost small" data-act="delete">Delete platform</button>' : ''}
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderGrid(){
+  const list = visible();
+  $('#count').textContent = list.length + (list.length === 1 ? ' platform' : ' platforms');
+  $('#grid').innerHTML = list.length ? list.map(cardHtml).join('') :
+    '<div class="empty"><b>No platforms match.</b><br>Clear the search or pick another filter.</div>';
+}
+
+function render(){ renderHero(); renderFilters(); renderGrid(); renderOurs(); }
+let pending = false;
+function softRender(){
+  const a = document.activeElement;
+  if(a && a.matches && a.matches('#grid textarea, #grid select')){ pending = true; renderHero(); renderFilters(); return; }
+  render();
+}
+
+function renderOurs(){
+  if(!$('#view-ours')) return;
+  const n = settings.platform_name || '', u = settings.platform_url || '', d = settings.platform_desc || '';
+  const act = document.activeElement;
+  if(!(act && ['pName','pUrl','pDesc'].includes(act.id))){ $('#pName').value = n; $('#pUrl').value = u; $('#pDesc').value = d; }
+  $('#ourLink').innerHTML = (u && /^https?:\/\//i.test(u)) ? `<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">Open ${esc(n || 'our platform')}</a>` :
+    '<span class="stamp">No link yet. Add it below when the platform is ready.</span>';
+  $('#ideas').innerHTML = ideas.length ? ideas.map(i => `<div class="idea">
+      <div><h4>${esc(i.title)}</h4>${i.details ? `<p>${esc(i.details)}</p>` : ''}
+      <span class="stamp">${esc(firstName(i.author))} &middot; ${ago(i.created_at)}</span></div>
+      <button class="btn ghost small" data-idea-del="${i.id}" aria-label="Delete idea ${esc(i.title)}">Delete</button></div>`).join('') :
+    '<p class="stamp">No ideas yet. Add the first one.</p>';
+}
+
+/* --------------------------------------------------------------- events */
+$('#members').addEventListener('click', e => {
+  const b = e.target.closest('[data-member]'); if(!b) return;
+  filter.member = filter.member === b.dataset.member ? 'all' : b.dataset.member; render();
+});
+$('#statusPills').addEventListener('click', e => {
+  const b = e.target.closest('[data-status]'); if(!b) return; filter.status = b.dataset.status; render();
+});
+$('#catSel').addEventListener('change', e => { filter.cat = e.target.value; render(); });
+$('#q').addEventListener('input', debounce(e => { filter.q = e.target.value; renderGrid(); }, 150));
+
+async function safe(fn){ try{ await fn(); }catch(err){ console.error(err); toast('Could not save. Check your internet and try again.', true); } }
+
+const saveField = debounce(async (id, field, value) => {
+  await safe(async () => { await db.updatePlatform(id, {[field]: value}); toast('Saved'); });
+}, 700);
+
+$('#grid').addEventListener('click', async e => {
+  const card = e.target.closest('.card'); if(!card) return;
+  const id = card.dataset.id, p = platforms.find(x => x.id === id), act = e.target.closest('[data-act]');
+  if(!act || !p) return;
+  if(act.dataset.act === 'toggle') await safe(async () => { await db.updatePlatform(id, {status: p.status === 'done' ? 'todo' : 'done'}); render(); if(p.status === 'done') toast('Marked as done'); });
+  if(act.dataset.act === 'status') await safe(async () => { await db.updatePlatform(id, {status: act.dataset.v}); render(); });
+  if(act.dataset.act === 'notes'){ openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderGrid(); }
+  if(act.dataset.act === 'delete' && confirm('Delete ' + p.name + ' for everyone?')) await safe(async () => { await db.deletePlatform(id); render(); });
+});
+$('#grid').addEventListener('input', e => {
+  const f = e.target.dataset.field; if(f !== 'services' && f !== 'our_idea') return;
+  saveField(e.target.closest('.card').dataset.id, f, e.target.value);
+});
+$('#grid').addEventListener('change', async e => {
+  if(e.target.dataset.field !== 'assignee') return;
+  await safe(async () => { await db.updatePlatform(e.target.closest('.card').dataset.id, {assignee: e.target.value}); render(); });
+});
+$('#grid').addEventListener('focusout', () => setTimeout(() => { if(pending && !document.activeElement.matches('#grid textarea, #grid select')){ pending = false; render(); } }, 50));
+
+/* tabs */
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t));
+  $('#view-platforms').hidden = t.dataset.tab !== 'platforms';
+  $('#view-ours').hidden = t.dataset.tab !== 'ours';
+}));
+
+/* who am I */
+function renderMe(){
+  const m = member(me);
+  $('#meBtn').innerHTML = `<span class="dot" style="background:${color(me)}"></span>${esc(m ? m.name.split(' ')[0] : (me || 'Choose name'))}`;
+}
+function setMe(v){ me = v; localStorage.setItem('itp_me', v); renderMe(); $('#whoDlg').close(); }
+$('#whoList').innerHTML = MEMBERS.map(m => `<button data-me="${m.id}"><span class="dot" style="background:${m.color}"></span><span>${esc(m.name)}<small>${esc(m.roll)} &middot; Group ${m.group}</small></span></button>`).join('');
+$('#whoList').addEventListener('click', e => { const b = e.target.closest('[data-me]'); if(b) setMe(b.dataset.me); });
+$('#otherBtn').addEventListener('click', () => { const v = $('#otherName').value.trim(); if(v) setMe(v); });
+$('#meBtn').addEventListener('click', () => $('#whoDlg').showModal());
+
+/* theme */
+$('#themeBtn').addEventListener('click', () => {
+  const dark = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() === '#0b1026';
+  const next = dark ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next; localStorage.setItem('itp_theme', next);
+});
+if(localStorage.getItem('itp_theme')) document.documentElement.dataset.theme = localStorage.getItem('itp_theme');
+
+/* add platform */
+$('#aCat').innerHTML = CATS.map(c => `<option>${esc(c)}</option>`).join('');
+$('#aWho').innerHTML = MEMBERS.map(m => `<option value="${m.id}">${esc(m.name)}</option>`).join('');
+$('#addBtn').addEventListener('click', () => { if(member(me)) $('#aWho').value = me; $('#addDlg').showModal(); });
+$('#aCancel').addEventListener('click', () => $('#addDlg').close());
+$('#aSave').addEventListener('click', async () => {
+  const name = $('#aName').value.trim(); if(!name){ $('#aName').focus(); return; }
+  let url = $('#aUrl').value.trim(); if(url && !/^https?:\/\//i.test(url)) url = 'https://' + url;
+  const maxSort = Math.max(0, ...platforms.map(p => p.sort ?? 0));
+  const obj = {id:'custom-' + Date.now(), name, category:$('#aCat').value, assignee:$('#aWho').value, learn:$('#aLearn').value.trim(),
+    gamified:$('#aGame').value.trim(), cost:$('#aCost').value.trim(), url, is_custom:true, is_extra:false, status:'todo',
+    services:'', our_idea:'', updated_by: me || null, updated_at:new Date().toISOString(), sort:maxSort + 1};
+  await safe(async () => { await db.addPlatform(obj); $('#addDlg').close(); ['aName','aUrl','aLearn','aCost','aGame'].forEach(i => $('#' + i).value = ''); render(); toast('Platform added'); });
+});
+
+/* our platform tab */
+$('#pSave').addEventListener('click', async () => {
+  let u = $('#pUrl').value.trim(); if(u && !/^https?:\/\//i.test(u)) u = 'https://' + u;
+  await safe(async () => { await db.setSettings({platform_name:$('#pName').value.trim(), platform_url:u, platform_desc:$('#pDesc').value.trim()}); renderOurs(); toast('Saved'); });
+});
+$('#iAdd').addEventListener('click', async () => {
+  const title = $('#iTitle').value.trim(); if(!title){ $('#iTitle').focus(); return; }
+  await safe(async () => { await db.addIdea({title, details:$('#iDetails').value.trim(), author: me || 'Someone', created_at:new Date().toISOString()});
+    $('#iTitle').value = ''; $('#iDetails').value = ''; renderOurs(); toast('Idea added'); });
+});
+$('#ideas').addEventListener('click', async e => {
+  const b = e.target.closest('[data-idea-del]'); if(!b) return;
+  if(confirm('Delete this idea for everyone?')) await safe(async () => { await db.deleteIdea(Number(b.dataset.ideaDel)); renderOurs(); });
+});
+
+/* ---------------------------------------------------------------- start */
+(async function start(){
+  $('#demoBar').hidden = LIVE;
+  renderMe();
+  try{ await db.load(); }
+  catch(err){ console.error(err); $('#grid').innerHTML = '<div class="empty"><b>Could not load the tracker.</b><br>Check the keys in config.js and that you ran supabase-setup.sql.</div>'; return; }
+  render(); db.subscribe();
+  if(!me) $('#whoDlg').showModal();
+  setInterval(() => { if(!document.activeElement.matches || !document.activeElement.matches('#grid textarea')) renderGrid(); }, 60000);
+})();
+</script>
+</body>
+</html>
