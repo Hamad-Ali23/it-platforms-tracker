@@ -199,8 +199,61 @@ a{color:var(--violet)}
 .notes{border-top:1px dashed var(--line);padding-top:16px;gap:10px;animation:notes-in .22s ease both}
 .notes label{font-size:12px;letter-spacing:.025em;text-transform:uppercase}
 .notes textarea.field{min-height:92px;line-height:1.55}
+
+.evidence{border:1px dashed var(--line);border-radius:14px;padding:12px;background:var(--paper);display:grid;gap:10px}
+.evidence-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.evidence-head strong{font-size:13px}
+.evidence-help{font-size:12px;color:var(--muted);margin:0}
+.evidence-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.evidence-controls input[type=file]{max-width:100%;font-size:12px}
+.upload-dropzone{position:relative;display:flex;align-items:center;gap:13px;width:100%;min-height:100px;padding:16px;border:1.5px dashed #fb923c;border-radius:14px;background:linear-gradient(135deg,#fff7ed 0%,#fff 70%);cursor:pointer;overflow:hidden;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.upload-dropzone:hover,.upload-dropzone:focus-within{border-color:#ea580c;box-shadow:0 7px 20px rgba(234,88,12,.10);transform:translateY(-1px)}
+.upload-dropzone:after{content:"";position:absolute;right:-18px;top:-28px;width:100px;height:100px;border-radius:50%;background:rgba(251,146,60,.10);pointer-events:none}
+.upload-icon{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;border-radius:13px;background:linear-gradient(145deg,#fb923c,#ea580c);color:white;font-size:24px;box-shadow:0 5px 12px rgba(234,88,12,.22)}
+.upload-copy{display:grid;gap:4px;min-width:0;position:relative;z-index:1}
+.upload-copy strong{font-size:13px;color:#9a3412}
+.upload-copy span{font-size:11px;color:#78716c;line-height:1.45}
+.upload-copy .selected-files{font-weight:700;color:#c2410c}
+.upload-dropzone input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2}
+.evidence-caption{width:100%}
+.evidence-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:9px}
+.evidence-item{min-width:0;position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
+.evidence-item a{display:flex;flex-direction:column;gap:5px;color:var(--text);text-decoration:none;font-size:11px;padding:6px;overflow-wrap:anywhere}
+.evidence-item img,.evidence-item video{width:100%;height:82px;object-fit:cover;border-radius:6px;background:var(--paper)}
+.evidence-file-icon{height:82px;display:grid;place-items:center;font-size:26px;background:var(--paper)}
+.evidence-item .file-name{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:28px}
+.evidence-delete{position:absolute;right:5px;top:5px;border:0;border-radius:7px;background:rgba(23,32,51,.88);color:#fff;padding:4px 6px;font-size:11px;cursor:pointer}
+.evidence-empty{font-size:12px;color:var(--muted)}
+@media(max-width:520px){.evidence-controls{align-items:stretch;flex-direction:column}.evidence-controls .btn{width:100%}}
+
 .notes-actions{display:flex;justify-content:flex-end;gap:8px;align-items:center;flex-wrap:wrap;margin-top:2px}
 .notes-actions .btn{min-width:138px}
+.detail-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:10px;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:0;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 5px 12px rgba(234,88,12,.18);transition:transform .18s,box-shadow .18s}
+.detail-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(234,88,12,.26)}
+#detailDlg{max-width:900px;width:calc(100% - 28px);max-height:88vh;overflow:auto;padding:0}
+.detail-hero{padding:24px;background:linear-gradient(135deg,var(--ink),var(--ink2));color:#fff;display:flex;align-items:flex-start;gap:14px;position:sticky;top:0;z-index:2}
+.detail-hero h2{font-size:clamp(23px,3vw,32px);margin:0 0 5px}
+.detail-hero p{margin:0;opacity:.78;font-size:13px}
+.detail-close{margin-left:auto;background:linear-gradient(135deg,#fb923c,#ea580c);color:#fff;border:1px solid #ea580c;border-radius:10px;padding:7px 11px;cursor:pointer;box-shadow:0 4px 12px rgba(234,88,12,.22);transition:filter .18s,transform .18s}
+.detail-close:hover{filter:brightness(1.06);transform:translateY(-1px)}
+#detailDlg .detail-content a.btn{text-decoration:none}
+#detailDlg [data-detail-close].btn.ghost{background:linear-gradient(135deg,#fb923c,#ea580c);color:#fff;border:1px solid #ea580c;box-shadow:0 4px 12px rgba(234,88,12,.18)}
+#detailDlg [data-detail-close].btn.ghost:hover{filter:brightness(1.06);color:#fff;border-color:#ea580c}
+.detail-content{padding:22px;display:grid;gap:16px}
+.detail-section{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--card);min-width:0}
+.detail-section h3{margin:0 0 10px;font:700 18px var(--display)}
+.detail-section p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.detail-points{margin:0;padding-left:22px;display:grid;gap:8px}
+.detail-points li{padding-left:3px;line-height:1.6;overflow-wrap:anywhere}
+.detail-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.detail-attachment{border:1px solid var(--line);border-radius:12px;padding:9px;display:flex;flex-direction:column;gap:7px;text-decoration:none;color:var(--text);min-width:0;transition:transform .18s,border-color .18s}
+.detail-attachment:hover{transform:translateY(-2px);border-color:#fb923c}
+.detail-attachment img,.detail-attachment video{width:100%;height:120px;object-fit:cover;border-radius:8px;background:var(--paper)}
+.detail-file-icon{height:120px;display:grid;place-items:center;background:var(--paper);border-radius:8px;font-size:36px}
+.detail-attachment strong{font-size:12px;overflow-wrap:anywhere}
+.detail-attachment small{color:var(--muted);font-size:11px}
+.detail-empty{color:var(--muted);font-size:13px}
+@media(max-width:560px){.detail-content{padding:12px}.detail-section{padding:12px}.detail-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-hero{padding:17px}}
 .notes .stamp{margin-right:auto}
 .panel{border-radius:22px;padding:26px;box-shadow:0 8px 26px rgba(65,44,25,.045)}
 .panel h2,dialog h2{font-family:var(--display);font-weight:700}
@@ -225,7 +278,7 @@ a{color:var(--violet)}
 </head>
 <body>
 
-<div class="demo" id="demoBar" hidden><b>Demo mode.</b> Your changes are saved only on this device. Add your Supabase keys in <code>config.js</code> so the whole team shares one tracker.</div>
+<div class="demo" id="demoBar" hidden><b>Demo mode.</b> Your changes are saved only on this device. Demo uploads are limited to 1 MB. Configure Supabase and run the evidence setup SQL for shared file uploads.</div>
 
 <header class="bar">
   <div class="wrap">
@@ -334,6 +387,8 @@ a{color:var(--violet)}
   </div>
 </dialog>
 
+<dialog id="detailDlg" aria-labelledby="detailTitle"><div id="detailBody"></div></dialog>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
@@ -353,6 +408,9 @@ let platforms = [], ideas = [], settings = {};
 let me = localStorage.getItem('itp_me') || '';
 const filter = {q:'', member:'all', cat:'all', status:'all'};
 const openCards = new Set();
+const evidenceCache = new Map();
+const MAX_EVIDENCE_BYTES = 20 * 1024 * 1024;
+const EVIDENCE_BUCKET = 'platform-evidence';
 
 /* --------------------------------------------------------------- helpers */
 const $ = s => document.querySelector(s);
@@ -432,6 +490,49 @@ const db = {
     if(!LIVE){ demoSave(); return; }
     const rows = Object.entries(obj).map(([key, value]) => ({key, value}));
     const {error} = await sb.from('settings').upsert(rows);
+    if(error) throw error;
+  },
+  async listEvidence(platformId){
+    if(!LIVE){
+      const all = JSON.parse(localStorage.getItem('itp_evidence_v1') || '{}');
+      return (all[platformId] || []).map(item => ({...item, url:item.dataUrl}));
+    }
+    const {data, error} = await sb.from('platform_evidence').select('*').eq('platform_id', String(platformId)).order('uploaded_at', {ascending:false});
+    if(error) throw error;
+    const rows = data || [];
+    return await Promise.all(rows.map(async row => {
+      const signed = await sb.storage.from(EVIDENCE_BUCKET).createSignedUrl(row.file_path, 3600);
+      return {...row, url: signed.error ? '' : signed.data.signedUrl};
+    }));
+  },
+  async uploadEvidence(platformId, file, caption){
+    if(!LIVE){
+      if(file.size > 1024 * 1024) throw new Error('Demo mode supports files up to 1 MB. Configure Supabase for persistent shared uploads up to 20 MB.');
+      const dataUrl = await new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error('Could not read this file.')); reader.readAsDataURL(file); });
+      const all = JSON.parse(localStorage.getItem('itp_evidence_v1') || '{}');
+      const item = {id:'local-' + Date.now() + '-' + Math.random().toString(36).slice(2,8), platform_id:String(platformId), file_name:file.name, mime_type:file.type || 'application/octet-stream', size_bytes:file.size, caption, uploaded_by:me || 'Someone', uploaded_at:new Date().toISOString(), dataUrl, url:dataUrl};
+      all[platformId] = all[platformId] || []; all[platformId].unshift(item); localStorage.setItem('itp_evidence_v1', JSON.stringify(all));
+      return item;
+    }
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(-120) || 'evidence-file';
+    const filePath = `${String(platformId)}/${Date.now()}-${crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2)}-${safeName}`;
+    const {error: uploadError} = await sb.storage.from(EVIDENCE_BUCKET).upload(filePath, file, {contentType:file.type || 'application/octet-stream', upsert:false});
+    if(uploadError) throw uploadError;
+    const row = {platform_id:String(platformId), file_path:filePath, file_name:file.name, mime_type:file.type || 'application/octet-stream', size_bytes:file.size, caption:caption || '', uploaded_by:me || 'Someone', uploaded_at:new Date().toISOString()};
+    const {data, error} = await sb.from('platform_evidence').insert(row).select().single();
+    if(error){ await sb.storage.from(EVIDENCE_BUCKET).remove([filePath]); throw error; }
+    const signed = await sb.storage.from(EVIDENCE_BUCKET).createSignedUrl(filePath, 3600);
+    return {...data, url:signed.error ? '' : signed.data.signedUrl};
+  },
+  async deleteEvidence(item){
+    if(!LIVE){
+      const all = JSON.parse(localStorage.getItem('itp_evidence_v1') || '{}');
+      all[item.platform_id] = (all[item.platform_id] || []).filter(x => x.id !== item.id);
+      localStorage.setItem('itp_evidence_v1', JSON.stringify(all)); return;
+    }
+    const {error: storageError} = await sb.storage.from(EVIDENCE_BUCKET).remove([item.file_path]);
+    if(storageError) throw storageError;
+    const {error} = await sb.from('platform_evidence').delete().eq('id', item.id);
     if(error) throw error;
   },
   subscribe(){
@@ -523,6 +624,7 @@ function cardHtml(p){
       <div class="links">
         ${p.url ? `<a class="linkbtn primary" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">↗ Visit site</a>` : ''}
         <button class="linkbtn" data-act="notes" aria-expanded="${!!openCards.has(p.id)}">▤ ${open ? 'Hide notes' : 'Notes'}</button>
+        <button class="detail-btn" data-act="view-details">↗ View Details</button>
       </div>
       <span class="stamp">${stamp}</span>
     </div>
@@ -531,6 +633,20 @@ function cardHtml(p){
       <textarea class="field" id="sv-${esc(p.id)}" data-field="services" placeholder="Courses, labs, certificates, price, mobile app...">${esc(p.services || '')}</textarea>
       <label for="id-${esc(p.id)}">How we can be different</label>
       <textarea class="field" id="id-${esc(p.id)}" data-field="our_idea" placeholder="One idea for our platform">${esc(p.our_idea || '')}</textarea>
+      <section class="evidence" aria-label="Evidence and attachments" data-evidence-platform="${esc(p.id)}">
+        <div class="evidence-head"><strong>📎 Evidence &amp; attachments</strong><span class="stamp" data-evidence-count>Loading files…</span></div>
+        <p class="evidence-help">Select multiple files at once: images, PDFs, short videos, Word/Excel/PowerPoint documents, TXT or CSV. Max 20 MB per file.</p>
+        <div class="evidence-controls">
+          <label class="upload-dropzone" data-upload-zone>
+            <span class="upload-icon" aria-hidden="true">＋</span>
+            <span class="upload-copy"><strong>Choose files to upload</strong><span>Click to browse your device · select multiple files together</span><span class="selected-files" data-selected-files>No files selected yet</span></span>
+            <input type="file" data-evidence-input accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/bmp,image/tiff,application/pdf,video/mp4,video/webm,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv" multiple aria-label="Choose multiple evidence files">
+          </label>
+          <input class="field evidence-caption" data-evidence-caption maxlength="160" placeholder="Optional caption (e.g. completed task / result)">
+          <button class="btn small" type="button" data-act="upload-evidence">↑ Upload selected files</button>
+        </div>
+        <div class="evidence-list" data-evidence-list><span class="evidence-empty">No files loaded yet.</span></div>
+      </section>
       <div class="row">
         <select class="field" data-field="assignee" aria-label="Assigned to">
           ${MEMBERS.map(m => `<option value="${m.id}" ${p.assignee === m.id ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}
@@ -551,6 +667,35 @@ function renderGrid(){
   $('#count').textContent = list.length + (list.length === 1 ? ' platform' : ' platforms');
   $('#grid').innerHTML = list.length ? list.map(cardHtml).join('') :
     '<div class="empty"><b>No platforms match.</b><br>Clear the search or pick another filter.</div>';
+}
+
+function notePointList(value){
+  const raw = String(value || '').trim();
+  if(!raw) return [];
+  const lines = raw.split(/(?:,|\r?\n)+/).map(line => line.trim()).filter(Boolean);
+  return lines.map(line => line.replace(/^(?:[-*•▪]\s*|\d+[.)]\s*)/, '')).filter(Boolean);
+}
+function detailAttachmentHtml(item){
+  const mime = item.mime_type || '';
+  const isImage = /^image\//i.test(mime);
+  const isVideo = /^video\//i.test(mime);
+  const icon = mime.includes('pdf') ? '📄' : isVideo ? '🎬' : /word|msword/.test(mime) ? '📝' : /sheet|excel|csv/.test(mime) ? '📊' : /presentation|powerpoint/.test(mime) ? '📽️' : mime.startsWith('text/') ? '📃' : '📎';
+  const preview = item.url && isImage ? `<img src="${esc(item.url)}" alt="${esc(item.caption || item.file_name)}" loading="lazy">` : item.url && isVideo ? `<video src="${esc(item.url)}" controls preload="metadata"></video>` : `<span class="detail-file-icon">${icon}</span>`;
+  return `<a class="detail-attachment" href="${esc(item.url || '#')}" ${item.url ? 'target="_blank" rel="noopener noreferrer"' : ''} title="Open ${esc(item.file_name)}">${preview}<strong>${esc(item.file_name)}</strong>${item.caption ? `<small>${esc(item.caption)}</small>` : ''}<small>${esc(item.uploaded_by || 'Team member')} · ${esc(ago(item.uploaded_at))}</small>${mime.includes('pdf') && item.url ? '<small>Open PDF ↗</small>' : '<small>Open attachment ↗</small>'}</a>`;
+}
+async function openPlatformDetails(platform){
+  const dlg = $('#detailDlg'), body = $('#detailBody');
+  const services = notePointList(platform.services);
+  const ideas = notePointList(platform.our_idea);
+  body.innerHTML = `<div class="detail-hero"><div class="platform-brand" aria-hidden="true">${esc((platform.name || '?').slice(0,1).toUpperCase())}</div><div><h2 id="detailTitle">${esc(platform.name)}</h2><p>${esc(platform.category || 'Platform')} · ${esc(STATUS[platform.status] || 'To do')} · ${esc((member(platform.assignee) || {}).name || 'Unassigned')}</p><p style="margin-top:7px">${esc(platform.learn || 'Activity details and evidence')}</p></div><button class="detail-close" type="button" data-detail-close aria-label="Close details">✕ Close</button></div><div class="detail-content"><section class="detail-section"><h3>1. Activity / What I explored</h3>${services.length ? `<ul class="detail-points">${services.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="detail-empty">No activity notes yet. Open Notes on the platform card to add your steps and observations.</p>'}</section><section class="detail-section"><h3>2. Ideas / How we can be different</h3>${ideas.length ? `<ul class="detail-points">${ideas.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="detail-empty">No ideas added yet.</p>'}</section><section class="detail-section"><h3>3. Evidence, screenshots & attachments</h3><div class="detail-gallery" id="detailGallery"><span class="detail-empty">Loading attachments…</span></div></section><section class="detail-section"><h3>4. Platform link</h3>${platform.url ? `<p><a class="btn" href="${esc(platform.url)}" target="_blank" rel="noopener noreferrer">↗ Visit ${esc(platform.name)}</a></p>` : '<p class="detail-empty">No website link added for this platform.</p>'}</section><div style="display:flex;justify-content:flex-end"><button class="btn ghost" type="button" data-detail-close>Close details</button></div></div>`;
+  if(!dlg.open) dlg.showModal();
+  const gallery = $('#detailGallery');
+  try{
+    let items = evidenceCache.get(String(platform.id));
+    if(!items){ items = await db.listEvidence(platform.id); evidenceCache.set(String(platform.id), items); }
+    if(!$('#detailDlg').open) return;
+    gallery.innerHTML = items.length ? items.map(detailAttachmentHtml).join('') : '<span class="detail-empty">No files uploaded yet. Open Notes → Evidence & attachments to add screenshots, PDFs, videos or documents.</span>';
+  }catch(err){ console.error(err); gallery.innerHTML = '<span class="detail-empty">Could not load attachments. Check your Supabase storage setup and permissions.</span>'; }
 }
 
 function renderStatus(){
@@ -603,6 +748,29 @@ function renderOurs(){
     '<p class="stamp">No ideas yet. Add the first one.</p>';
 }
 
+async function refreshEvidence(platformId, card){
+  const list = card.querySelector('[data-evidence-list]');
+  const count = card.querySelector('[data-evidence-count]');
+  if(!list || !count) return;
+  list.innerHTML = '<span class="evidence-empty">Loading attachments…</span>';
+  try{
+    const items = await db.listEvidence(platformId);
+    evidenceCache.set(String(platformId), items);
+    count.textContent = `${items.length} file${items.length === 1 ? '' : 's'}`;
+    list.innerHTML = items.length ? items.map(item => {
+      const isImage = /^image\//i.test(item.mime_type || '');
+      const isVideo = /^video\//i.test(item.mime_type || '');
+      const mime = item.mime_type || '';
+      const icon = mime.includes('pdf') ? '📄' : isVideo ? '🎬' : mime.includes('word') || mime.includes('msword') ? '📝' : mime.includes('sheet') || mime.includes('excel') || mime.includes('csv') ? '📊' : mime.includes('presentation') || mime.includes('powerpoint') ? '📽️' : mime.startsWith('text/') ? '📃' : '📎';
+      const preview = item.url && isImage ? `<img src="${esc(item.url)}" alt="${esc(item.caption || item.file_name)}" loading="lazy">` : item.url && isVideo ? `<video src="${esc(item.url)}" muted preload="metadata"></video>` : `<span class="evidence-file-icon">${icon}</span>`;
+      return `<div class="evidence-item">${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" title="Open ${esc(item.file_name)}">${preview}<span class="file-name">${esc(item.file_name)}</span>${item.caption ? `<span class="stamp">${esc(item.caption)}</span>` : ''}<span class="stamp">${esc(item.uploaded_by || 'Team member')} · ${esc(ago(item.uploaded_at))}</span></a>` : `<div style="padding:6px">${preview}<span class="file-name">${esc(item.file_name)}</span></div>`}<button class="evidence-delete" type="button" data-act="delete-evidence" data-evidence-id="${esc(item.id)}" aria-label="Delete ${esc(item.file_name)}">Delete</button></div>`;
+    }).join('') : '<span class="evidence-empty">No evidence uploaded yet.</span>';
+  }catch(err){
+    console.error(err); count.textContent = 'Could not load';
+    list.innerHTML = '<span class="evidence-empty">Could not load files. In Supabase, run the evidence setup SQL included with this update.</span>';
+  }
+}
+
 /* --------------------------------------------------------------- events */
 $('#members').addEventListener('click', e => {
   const b = e.target.closest('[data-member]'); if(!b) return;
@@ -645,8 +813,9 @@ $('#grid').addEventListener('click', async e => {
   const card = e.target.closest('.card'); if(!card) return;
   const id = card.dataset.id, p = platforms.find(x => x.id === id), act = e.target.closest('[data-act]');
   if(!act || !p) return;
+  if(act.dataset.act === 'view-details'){ await openPlatformDetails(p); return; }
   if(act.dataset.act === 'status') await safe(async () => { await db.updatePlatform(id, {status: act.dataset.v}); render(); });
-  if(act.dataset.act === 'notes'){ openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderGrid(); }
+  if(act.dataset.act === 'notes'){ openCards.has(id) ? openCards.delete(id) : openCards.add(id); renderGrid(); if(openCards.has(id)){ const freshCard = [...document.querySelectorAll('.card')].find(c => c.dataset.id === id); if(freshCard) refreshEvidence(id, freshCard); } }
   if(act.dataset.act === 'save-notes') await submitNotes(card, p);
   if(act.dataset.act === 'reset-notes') {
     card.querySelector('[data-field="services"]').value = p.services || '';
@@ -654,6 +823,38 @@ $('#grid').addEventListener('click', async e => {
     const noteStatus = card.querySelector('[data-note-status]');
     if(noteStatus) noteStatus.textContent = 'Restored the last saved notes.';
     toast('Unsaved edits reset. Saved notes are unchanged.');
+  }
+  if(act.dataset.act === 'upload-evidence'){
+    const input = card.querySelector('[data-evidence-input]');
+    const captionInput = card.querySelector('[data-evidence-caption]');
+    const files = [...(input.files || [])];
+    if(!files.length){ toast('Choose at least one file first.', true); input.focus(); return; }
+    const allowedMime = /^(image\/(png|jpeg|webp|gif|avif|bmp|tiff?)|application\/pdf|video\/(mp4|webm)|application\/(msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.document|vnd\.ms-excel|vnd\.openxmlformats-officedocument\.spreadsheetml\.sheet|vnd\.ms-powerpoint|vnd\.openxmlformats-officedocument\.presentationml\.presentation|vnd\.ms-powerpoint\.presentation|vnd\.ms-excel\.sheet\.macroenabled\.12)|text\/(plain|csv)|application\/vnd\.ms-excel)$/i;
+    const allowedExt = /\.(png|jpe?g|webp|gif|avif|bmp|tiff?|pdf|mp4|webm|doc|docx|xls|xlsx|ppt|pptx|txt|csv)$/i;
+    const invalid = files.find(file => file.size > MAX_EVIDENCE_BYTES || !(allowedMime.test(file.type) || (!file.type && allowedExt.test(file.name))));
+    if(invalid){ toast(`${invalid.name}: supported types are images, PDF, MP4/WEBM, DOC/DOCX, XLS/XLSX, PPT/PPTX, TXT and CSV (max 20 MB each).`, true); return; }
+    const uploadButton = act; uploadButton.disabled = true; uploadButton.textContent = 'Uploading…';
+    try{
+      for(const file of files) await db.uploadEvidence(id, file, captionInput.value.trim());
+      input.value = ''; captionInput.value = '';
+      const selectedLabel = input.closest('[data-upload-zone]')?.querySelector('[data-selected-files]'); if(selectedLabel) selectedLabel.textContent = 'No files selected yet';
+      const uploadTitle = input.closest('[data-upload-zone]')?.querySelector('.upload-copy strong'); if(uploadTitle) uploadTitle.textContent = 'Choose files to upload';
+      await refreshEvidence(id, card);
+      toast(files.length === 1 ? 'Evidence uploaded.' : `${files.length} files uploaded.`);
+    }catch(err){
+      console.error(err);
+      const message = String(err.message || err);
+      toast(message.includes('platform_evidence') || message.includes('Bucket not found') || message.includes('bucket') ? 'Storage is not set up yet. Run the supplied Supabase evidence setup SQL.' : `Upload failed: ${message.slice(0,100)}`, true);
+    }finally{ uploadButton.disabled = false; uploadButton.textContent = 'Upload files'; }
+  }
+  if(act.dataset.act === 'delete-evidence'){
+    const items = evidenceCache.get(String(id)) || [];
+    const item = items.find(x => String(x.id) === act.dataset.evidenceId);
+    if(item && confirm(`Delete evidence file “${item.file_name}”?`)){
+      act.disabled = true;
+      try{ await db.deleteEvidence(item); await refreshEvidence(id, card); toast('Evidence deleted.'); }
+      catch(err){ console.error(err); toast('Could not delete this file. Check storage permissions.', true); act.disabled = false; }
+    }
   }
   if(act.dataset.act === 'delete' && confirm('Delete ' + p.name + ' for everyone?')) await safe(async () => { await db.deletePlatform(id); render(); });
 });
@@ -664,10 +865,21 @@ $('#grid').addEventListener('input', e => {
   if(status) status.textContent = 'Unsaved changes — click Submit Notes to save.';
 });
 $('#grid').addEventListener('change', async e => {
+  if(e.target.matches('[data-evidence-input]')) {
+    const zone = e.target.closest('[data-upload-zone]');
+    const label = zone && zone.querySelector('[data-selected-files]');
+    const files = [...(e.target.files || [])];
+    if(label) label.textContent = files.length ? `${files.length} file${files.length === 1 ? '' : 's'} selected · ${(files.reduce((sum, f) => sum + f.size, 0) / (1024 * 1024)).toFixed(2)} MB total` : 'No files selected yet';
+    if(zone) zone.querySelector('.upload-copy strong').textContent = files.length ? 'Ready to upload' : 'Choose files to upload';
+    return;
+  }
   if(e.target.dataset.field !== 'assignee') return;
   await safe(async () => { await db.updatePlatform(e.target.closest('.card').dataset.id, {assignee: e.target.value}); render(); });
 });
 $('#grid').addEventListener('focusout', () => setTimeout(() => { if(pending && !document.activeElement.matches('#grid textarea, #grid select')){ pending = false; render(); } }, 50));
+
+$('#detailDlg').addEventListener('click', e => { if(e.target.matches('[data-detail-close]')) $('#detailDlg').close(); });
+$('#detailDlg').addEventListener('click', e => { if(e.target === $('#detailDlg')) $('#detailDlg').close(); });
 
 /* tabs */
 document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
